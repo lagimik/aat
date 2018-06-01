@@ -1,0 +1,55 @@
+# Azure Non-Regional Services and Secondary Region Failover
+
+## When to use
+
+Use the procedure described in this section to understand secondary region failover for non-regional and management services.
+
+## Guidance
+
+### Azure Non-Regional Services
+
+Non-regional services are not dependent on any single region and are designed as highly available services managed by Azure.
+
+ | **Category**|**Name**|
+ |-------------|--------|
+ |Identity|Azure Active Directory <br/>Multi-FactorAuthentication<br/> Azure Active Directory - B2C|
+ |Management Tools | Activity Logs & Alerts<br/> Diagnostic Logs<br/> Action Groups<br/> Azure Policy<br/> Cloud Shell<br/>|
+  |Networking| Azure DNS<br/> Traffic Manager<br/>|
+  |Security| Azure Security Centre|
+
+### Azure Key Vault
+* In the event that an entire Azure region is unavailable, the requests made to Azure Key Vault in that region are automatically routed (failed over) to a secondary region in read-only mode.
+
+### Azure Recovery Service Vault
+
+* By default, the Recovery Services vault has geo-redundant storage.
+* If the Recovery Services vault is the primary backup, set storage replication option to geo-redundant storage.
+* If virtual machines are deployed in multiple regions, a Recovery Services vault should be created in each region.
+
+### Automation Account
+* Geo-replication, standard in Azure Automation accounts, backs up account data to a secondary geographical region for redundancy. The secondary data, copied from the primary region, is continuously updated in case of data loss.
+
+### Log Analytics Workspace
+* Log analytics is support by the primary and secondary region pairing for failover scenarios. However, Log Analytics is not available in all regions and the service may not be delivered from your primary region. Current regional availability includes (East US, South Central US, Canada Central) - June 2018
+
+### Security Centre Workspace
+* Azure Security Center is non-regional and not subject to availability in any given region. Azure Security Center uses the Microsoft Monitoring Agent, also used by the Log Analytics service, to collect security data from your virtual machines. [Data collected and stored](https://docs.microsoft.com/en-us/azure/security-center/security-center-planning-and-operations-guide#data-collection-and-storage) from this agent will be stored in your Log Analytics workspace(s).
+
+### Application Insights
+* Application Insights is support by the primary and secondary region pairing for failover scenarios. However, Log Analytics is not available in all regions and the service may not be delivered from your primary region. Current regional availability includes (East US, South Central US, West US 2). - June 2018
+
+## Procedure
+### 1.  Select the Automation Account Primary Region
+* You can choose a primary region, or location, when [setting up your account](https://docs.microsoft.com/en-us/azure/automation/automation-quickstart-create-account#create-automation-account), and then a secondary region is assigned to it automatically.
+
+### 2.  Select Log Analytics Workspace Primary Region
+* You can choose a primary region, or location, when [setting up your workspace](https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-quick-create-workspace#create-a-workspace), and then a secondary region is assigned to it automatically.
+
+### 3. Select Key-Vault Primary Region
+* You can choose a primary region, or location, [when creating a key vault](https://docs.microsoft.com/en-us/azure/key-vault/quick-create-portal#create-a-vault), and then a secondary region is assigned to it automatically.
+
+### 4. Select Recovery Service Vault Primary Region and Geo-Replication
+* You can choose a primary region, or location, [when creating a recovery services vault](https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-first-look-arm#create-a-recovery-services-vault-for-a-vm), and then a secondary region is assigned to it automatically. Set [storage replication](https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-first-look-arm#set-storage-replication).
+
+### 5.  Selection Application Insight Resource Region
+*  You can choose a primary region, or location, [when creating an Application Insights Resource](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-create-new-resource#create-an-application-insights-resource-1), and then a secondary region is assigned to it automatically.
